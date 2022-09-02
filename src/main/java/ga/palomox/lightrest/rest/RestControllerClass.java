@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.eclipse.jetty.server.Request;
 
-import ga.palomox.lightrest.rest.annotations.Map;
+import ga.palomox.lightrest.rest.annotations.Mapping;
 import ga.palomox.lightrest.rest.model.EndpointPath;
 import ga.palomox.lightrest.rest.model.Identity;
 import ga.palomox.lightrest.rest.model.MappedMethod;
@@ -35,8 +35,8 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 		Method[] methods = controller.getMethods();
 
 		for (Method method : methods) {
-			if (method.isAnnotationPresent(Map.class) && method.getReturnType() == ResponseEntity.class) {
-				Map annotation = method.getAnnotation(Map.class);
+			if (method.isAnnotationPresent(Mapping.class) && method.getReturnType() == ResponseEntity.class) {
+				Mapping annotation = method.getAnnotation(Mapping.class);
 
 				String path = annotation.path();
 
@@ -97,7 +97,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 
 		Method method = mappedMethod.getMethod();
 
-		ResponseEntity responseEntity;
+		ResponseEntity<?> responseEntity;
 		
 		I identity = null;
 		
@@ -140,7 +140,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 		if (mappedMethod.getParameters().isEmpty()) {
 			// We invoke the method with empty params
 			try {
-				responseEntity = (ResponseEntity) method.invoke(this.restController, new Object[0]);
+				responseEntity = (ResponseEntity<?>) method.invoke(this.restController, new Object[0]);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 				return;
@@ -178,7 +178,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 			
 			// We can finally invoke the method 
 			try {
-				responseEntity = (ResponseEntity) method.invoke(this.restController, parameters);
+				responseEntity = (ResponseEntity<?>) method.invoke(this.restController, parameters);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 				return;
