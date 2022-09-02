@@ -44,7 +44,6 @@ publishing{
   publications {
     fatjar(MavenPublication) { publication -> 
       project.shadow.component(publication)
-      //signing.signPom(publication)
         pom{
                 name = 'LightRest'
                 description = 'Simple library to create a REST api in java'
@@ -99,5 +98,4 @@ repositories {
 
 dependencies {
 	implementation 'org.eclipse.jetty:jetty-server:11.0.11'
-	implementation 'sh.ory:ory-client:0.2.0-alpha.25'
 }
