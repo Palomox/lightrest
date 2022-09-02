@@ -8,8 +8,28 @@ Some of the benefits of this lib are that creating a REST api is as easy as crea
 
 LightRest is published on maven central, so using it is as easy as adding it to your maven or gradle buildfile:
 
-```
+```md
 groupId: ga.palomox.lightrest
 artifactId: lightrest
 version: 1.0.0
+classifier: all #it is important to remember to set the classifier!
+```
+
+This means, in maven, you have to add the following to your pom.xml
+
+```xml
+<dependency>
+  <groupId>ga.palomox.lightrest</groupId>
+  <artifactId>lightrest</artifactId>
+  <version>1.0.0</version>
+  <classifier>all</classifier>
+</dependency>
+```
+
+or, with gradle, this to your build.gradle
+
+```groovy
+dependencies{
+	implementation 'ga.palomox.lightrest:lightrest:1.0.0:all'
+}
 ```
