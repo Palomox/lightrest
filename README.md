@@ -11,8 +11,7 @@ LightRest is published on maven central, so using it is as easy as adding it to 
 ```md
 groupId: ga.palomox.lightrest
 artifactId: lightrest
-version: 1.0.0
-classifier: all #it is important to remember to set the classifier!
+version: 1.1.0
 ```
 
 This means, in maven, you have to add the following to your pom.xml
@@ -21,8 +20,7 @@ This means, in maven, you have to add the following to your pom.xml
 <dependency>
   <groupId>ga.palomox.lightrest</groupId>
   <artifactId>lightrest</artifactId>
-  <version>1.0.0</version>
-  <classifier>all</classifier>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -30,6 +28,6 @@ or, with gradle, this to your build.gradle
 
 ```groovy
 dependencies{
-	implementation 'ga.palomox.lightrest:lightrest:1.0.0:all'
+	implementation 'ga.palomox.lightrest:lightrest:1.1.0'
 }
 ```

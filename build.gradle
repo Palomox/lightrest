@@ -40,12 +40,24 @@ javadoc {
 }
 
 shadowJar{
+	archiveClassifier.set('')
 }
+
+
+
+shadowJar.finalizedBy javadocJar
+shadowJar.finalizedBy sourcesJar
+
+publish.dependsOn shadowJar
+publish.dependsOn javadocJar
+publish.dependsOn sourcesJar
 
 publishing{
   publications {
     fatjar(MavenPublication) { publication -> 
-      project.shadow.component(publication)
+    	publication.artifact(javadocJar) 
+    	publication.artifact(sourcesJar)
+      	project.shadow.component(publication)
         pom{
                 name = 'LightRest'
                 description = 'Simple library to create a REST api in java'
