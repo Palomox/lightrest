@@ -4,6 +4,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
+import ga.palomox.lightrest.middleware.Middleware;
 import ga.palomox.lightrest.rest.RestControllerClass;
 
 public class LightrestServer {
@@ -13,7 +14,7 @@ public class LightrestServer {
 	private RestControllerClass<?, ?, ?> controller;
 	public static LightrestServer instance;
 
-	public LightrestServer(int port, RestControllerClass<?, ?, ?> controller) {
+	public LightrestServer(int port, RestControllerClass<?, ?, ?> controller, Middleware[] middlewares) {
 		this.port = port;
 
 		this.controller = controller;
@@ -30,7 +31,7 @@ public class LightrestServer {
 
 		server.addConnector(connector);
 
-		server.setHandler(new ServerHandler());
+		server.setHandler(new ServerHandler(this.controller, middlewares));
 		
 		server.setErrorHandler(new JsonErrorHandler());
 
