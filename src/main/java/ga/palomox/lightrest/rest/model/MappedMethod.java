@@ -10,6 +10,7 @@ import org.eclipse.jetty.server.Request;
 import ga.palomox.lightrest.rest.annotations.Authenticated;
 import ga.palomox.lightrest.rest.annotations.PathVariable;
 import ga.palomox.lightrest.rest.annotations.Relationship;
+import ga.palomox.lightrest.rest.annotations.Weigh;
 import ga.palomox.lightrest.rest.permissions.RelationshipStorage;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -22,6 +23,7 @@ public class MappedMethod {
 	// Stores string for key of the urlparam and position of the one in the method.
 	private HashMap<Integer, String> parameters; 
 	private RelationshipStorage[] relationships = null;
+	private int weigh;
  	
 	public MappedMethod(Method method, EndpointPath path, String protocol, Class<?> idClass) {
 		this.method = method;
@@ -60,7 +62,14 @@ public class MappedMethod {
 				relationships[i] = new RelationshipStorage(relationship.relation(), relationship.namespace(), relationship.object(), relationship.isPathVar());
 			}
  			this.relationships = relationships;
+ 			if(this.method.isAnnotationPresent(Weigh.class)) {
+ 				// There is a weigh specification
+ 				this.weigh = this.method.getAnnotation(Weigh.class).value();
+ 			} else {
+ 				this.weigh = 0; 
+ 			}
 		}
+		
 	}
 
 
@@ -90,6 +99,8 @@ public class MappedMethod {
 	public HashMap<Integer, String> getParameters() {
 		return parameters;
 	}
-	
+	public int getWeigh() {
+		return this.weigh;
+	}
 	
 }

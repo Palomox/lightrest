@@ -6,12 +6,14 @@ Some of the benefits of this lib are that creating a REST api is as easy as crea
 
 ## Using LightRest
 
+[![Maven Central](https://img.shields.io/maven-central/v/ga.palomox.lightrest/lightrest.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22ga.palomox.lightrest%22%20AND%20a:%22lightrest%22)
+
 LightRest is published on maven central, so using it is as easy as adding it to your build system as a maven dependency:
 
 ```md
 groupId: ga.palomox.lightrest
 artifactId: lightrest
-version: 1.2.2
+version: 1.2.3
 ```
 
 This means, in maven, you have to add the following to your pom.xml
@@ -20,7 +22,7 @@ This means, in maven, you have to add the following to your pom.xml
 <dependency>
   <groupId>ga.palomox.lightrest</groupId>
   <artifactId>lightrest</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
 </dependency>
 ```
 
@@ -28,6 +30,6 @@ or, with gradle, this to your build.gradle
 
 ```groovy
 dependencies{
-	implementation 'ga.palomox.lightrest:lightrest:1.2.2'
+	implementation 'ga.palomox.lightrest:lightrest:1.2.3'
 }
 ```

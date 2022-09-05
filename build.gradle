@@ -78,7 +78,7 @@ publishing{
                 scm {
                     connection = 'scm:git:git://github.com/Palomox/lightrest.git'
                     developerConnection = 'scm:git:ssh://github.com/Palomox/lightrest.git'
-                    url = 'http://github.com/Palomox/lightrest/'
+                    url = 'http://github.com/Palomox/lightrest'
                 }
       }
     }
@@ -101,7 +101,7 @@ signing {
 }
 
 
-version = '1.2.2'
+version = '1.2.3'
 group = "ga.palomox.lightrest"
 
 repositories {
