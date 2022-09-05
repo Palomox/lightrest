@@ -38,15 +38,13 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 		for (Method method : methods) {
 			if (method.isAnnotationPresent(Mapping.class) && method.getReturnType() == ResponseEntity.class) {
 				Mapping annotation = method.getAnnotation(Mapping.class);
-
 				String path = annotation.path();
-
 				MappedMethod mappedMethod = new MappedMethod(method, new EndpointPath(path), annotation.protocol(),
 						this.getIdentityType());
 				for (EndpointPath ePath : this.restMethods.keySet()) {
 					if (ePath.getPath().equals(path)) {
 						this.restMethods.get(ePath).add(mappedMethod);
-						return;
+						continue;
 					}
 				}
 				ArrayList<MappedMethod> temp = new ArrayList<>();
