@@ -41,15 +41,19 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 				String path = annotation.path();
 				MappedMethod mappedMethod = new MappedMethod(method, new EndpointPath(path), annotation.protocol(),
 						this.getIdentityType());
+				boolean set = false;
 				for (EndpointPath ePath : this.restMethods.keySet()) {
 					if (ePath.getPath().equals(path)) {
 						this.restMethods.get(ePath).add(mappedMethod);
-						continue;
+						set = true;
+						break;
 					}
 				}
-				ArrayList<MappedMethod> temp = new ArrayList<>();
-				temp.add(mappedMethod);
-				this.restMethods.put(new EndpointPath(path), temp);
+				if (!set) {
+					ArrayList<MappedMethod> temp = new ArrayList<>();
+					temp.add(mappedMethod);
+					this.restMethods.put(new EndpointPath(path), temp);
+				}
 
 			}
 		}
@@ -98,7 +102,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 		ListIterator<MappedMethod> methods = wantedMethods.listIterator();
 		while (methods.hasNext()) {
 			MappedMethod mappedMethod = methods.next();
-			
+
 			Method method = mappedMethod.getMethod();
 
 			ResponseEntity<?> responseEntity;
@@ -111,7 +115,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 				Optional<I> identityOpt = this.identityManager.loadIdentity(baseRequest);
 				if (identityOpt.isEmpty()) {
 					// 403 because no session
-					if(methods.hasNext()) {
+					if (methods.hasNext()) {
 						continue;
 					}
 					response.sendError(403, "This endpoint requires a session");
@@ -133,7 +137,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 						}
 						if (!permsManager.isAllowed(userId, relationship.getRelation(), relationship.getNamespace(),
 								actualObject)) {
-							if(methods.hasNext()) {
+							if (methods.hasNext()) {
 								continue;
 							}
 							response.sendError(403, "You are not allowed to access this endpoint");
