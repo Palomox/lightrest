@@ -87,8 +87,19 @@ public class ResponseEntity<T> {
 		
 		if(this.content instanceof String content) {
 			this.body = content;
+		} else if (this.content instanceof byte[] byteContent){
+			try {
+				response.getOutputStream().write(byteContent);
+
+			} catch (IOException e) {
+				return;
+			}
+			response.setStatus(this.responseCode);
+			response.setContentLength(byteContent.length);
+			return;
 		} else {
 			this.body = new Gson().toJson(this.content);
+
 		}
 		
 		try {
@@ -99,4 +110,15 @@ public class ResponseEntity<T> {
 		response.setStatus(this.responseCode);
 		response.setContentLength(body.length());
 	}
+	public String getContentType() {
+		return contentType;
+	}
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+	}
+	public HashMap<String, String> getHeaders() {
+		return headers;
+	}
+	
+	
 }
