@@ -202,9 +202,10 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 					return;
 				}
 
-				// We parse the responseEntity into the servlet response
-				responseEntity.parse(response);
 			}
+			// We parse the responseEntity into the servlet response
+			responseEntity.parse(response);
+
 		}
 	}
 
