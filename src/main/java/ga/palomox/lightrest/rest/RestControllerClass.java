@@ -68,22 +68,35 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 
 		EndpointPath methodPath = null;
 		MatchResult result = null;
-
+		
+		MatchResult fullResult = null;
+		MatchResult partialResult = null;
+		
+		EndpointPath fullMatchPath = null;
+		EndpointPath partialMatchPath = null;
+		
+		
 		for (EndpointPath ePath : this.restMethods.keySet()) {
-			var fullResult = ePath.fullyMatches(path);
-			if (fullResult.matches()) {
-				methodPath = ePath;
-				result = fullResult;
+			var fullResultTmp = ePath.fullyMatches(path);
+			if (fullResultTmp.matches()) {
+				fullMatchPath = ePath;
+				fullResult = fullResultTmp;
 				break;
 			}
-			var partialResult = ePath.matches(path);
+			var partialResultTmp = ePath.matches(path);
 			if(partialResult.matches()) {
-				methodPath = ePath;
-				result = partialResult;
-				break;
-
+				partialMatchPath = ePath;
+				partialResult = partialResultTmp;
 			}
 			
+		}
+		
+		if(fullResult != null) {
+			result = fullResult;
+			methodPath = fullMatchPath;
+		} else {
+			result = partialResult;
+			methodPath = partialMatchPath;
 		}
 
 		if (methodPath == null) {
