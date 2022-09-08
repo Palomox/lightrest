@@ -33,6 +33,19 @@ public class EndpointPath {
 		
 		return new MatchResult(true, params);
 	}
+	
+	public MatchResult fullyMatches(String path) {
+		if(path.contains("{")) {
+			return new MatchResult(false);
+		}
+		
+		if(this.path.equalsIgnoreCase(path)) {
+			return new MatchResult(true);
+		}
+		return new MatchResult(false);
+		
+	}
+
 
 	public String getPath() {
 		return path;

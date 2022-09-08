@@ -1,5 +1,6 @@
 package ga.palomox.lightrest.rest.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MatchResult {
@@ -8,7 +9,7 @@ public class MatchResult {
 	
 	public MatchResult(boolean matches) {
 		this.matches = matches;
-		this.params = null;
+		this.params = new HashMap<>();
 	}
 	
 	public MatchResult(boolean matches, Map<String, String> params) {

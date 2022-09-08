@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.ListIterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -70,12 +70,20 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 		MatchResult result = null;
 
 		for (EndpointPath ePath : this.restMethods.keySet()) {
-			var tempResult = ePath.matches(path);
-			if (tempResult.matches()) {
+			var fullResult = ePath.fullyMatches(path);
+			if (fullResult.matches()) {
 				methodPath = ePath;
-				result = tempResult;
+				result = fullResult;
 				break;
 			}
+			var partialResult = ePath.matches(path);
+			if(partialResult.matches()) {
+				methodPath = ePath;
+				result = partialResult;
+				break;
+
+			}
+			
 		}
 
 		if (methodPath == null) {
@@ -86,7 +94,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 		// We fetch all the methods registered for said path
 		var localMethods = this.restMethods.get(methodPath);
 		// We filter the methods based on the HTTP protocol wanted
-		var wantedMethods = localMethods.parallelStream().filter(mm -> mm.getProtocol().equalsIgnoreCase(protocol))
+		List<MappedMethod> wantedMethods = localMethods.parallelStream().filter(mm -> mm.getProtocol().equalsIgnoreCase(protocol))
 				.sorted((prev, next) -> {
 					return next.getWeigh() - prev.getWeigh();
 				}) // CHECK
@@ -99,9 +107,8 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 			return;
 		}
 		// It does exist
-		ListIterator<MappedMethod> methods = wantedMethods.listIterator();
-		while (methods.hasNext()) {
-			MappedMethod mappedMethod = methods.next();
+		for (int i=0; i<wantedMethods.size(); i++) {
+			MappedMethod mappedMethod = wantedMethods.get(i);
 
 			Method method = mappedMethod.getMethod();
 
@@ -115,7 +122,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 				Optional<I> identityOpt = this.identityManager.loadIdentity(baseRequest);
 				if (identityOpt.isEmpty()) {
 					// 403 because no session
-					if (methods.hasNext()) {
+					if (i<wantedMethods.size()-1) {
 						continue;
 					}
 					response.sendError(403, "This endpoint requires a session");
@@ -128,6 +135,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 				Optional<RelationshipStorage[]> optRelationships = mappedMethod.getRelationships();
 				if (!optRelationships.isEmpty()) {
 					var relationships = optRelationships.get();
+					boolean allowed = true;
 					for (RelationshipStorage relationship : relationships) {
 						String actualObject;
 						if (relationship.isMapped()) {
@@ -137,12 +145,15 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 						}
 						if (!permsManager.isAllowed(userId, relationship.getRelation(), relationship.getNamespace(),
 								actualObject)) {
-							if (methods.hasNext()) {
-								continue;
+							if (i == wantedMethods.size()-1) {
+								response.sendError(403, "You are not allowed to access this endpoint");
+								return;
 							}
-							response.sendError(403, "You are not allowed to access this endpoint");
-							return;
+							allowed = false;
 						}
+					}
+					if(!allowed) {
+						continue;
 					}
 				}
 
@@ -205,6 +216,7 @@ public class RestControllerClass<T, I extends Identity<?>, P> {
 			}
 			// We parse the responseEntity into the servlet response
 			responseEntity.parse(response);
+			return; 
 
 		}
 	}
